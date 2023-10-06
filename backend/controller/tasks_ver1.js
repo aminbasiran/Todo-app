@@ -1,24 +1,36 @@
 const router = require("express").Router()
-
 const todoSchema = require("../model/todoSchema.js")
+const {protect} = require("../middleware/authMiddleware.js")
 
-router.route("/tasks")
+router.route("")
 // SHOW ALL TASKS
-    .get((req,res)=>{
-        todoSchema.find().then(foundAll=>{
+    .get(protect, async (req,res,next)=>{
+        try{
+            const foundAll = await todoSchema.find({id:req.verifiedUser.id})
             res.json(foundAll)
-        })
+        }
+
+        catch(err){
+            next(err)
+        }
     })
 
 // CREATE ONE TASK
-    .post((req,res)=>{
-        todoSchema.create(req.body).then(created=>{
-            res.json(created)
-        })
+    .post(protect, async (req,res,next)=>{
+        try{
+            req.body.id = req.verifiedUser._id
+            todoSchema.create(req.body).then(created=>{
+                res.json(created)
+            })
+        }
+        catch(err){
+            next(err)
+        }
+        
     })
 
 
-router.route("/tasks/:id")
+router.route("/:id")
 // SHOW A TASK BY ID
     .get((req,res)=>{
         todoSchema.findById(req.params.id).then(found=>{

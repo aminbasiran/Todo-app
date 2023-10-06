@@ -1,10 +1,9 @@
 const mongoose = require("mongoose")
 
-
 const todoSchema = mongoose.Schema(
     {
-        title: {type:String},
-        description : {type:String}
+        id:{type:String,required:true},
+        title: {type:String}
     },
     {timestamps:true}
 )

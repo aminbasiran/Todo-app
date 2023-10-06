@@ -1,0 +1,27 @@
+.card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &__title, &__edit,&__delete{
+        height: 50px;
+        width: 120px;
+    }
+    
+    &__title{
+        flex: 10;
+        background: #d1d1d1;
+    }
+
+    &__edit{
+        background: #9753ac;
+        flex: 1;
+
+    }
+    &__delete{
+        background: #bb412c;
+        flex: 1;
+
+    }
+}
