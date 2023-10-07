@@ -61,7 +61,9 @@ function App() {
 
   const handleDelete = (id)=>{
     const rest = `http://localhost:3001/v1/api/tasks/${id}`
-    axios.delete(rest)
+    axios.delete(rest,{headers:{
+      "Authorization": `${token}`
+    }})
     .then(response =>{
       const tasksAfterDeleted = tasks.filter((task)=>{
         task._id !== id

@@ -1,4 +1,5 @@
 import { useFormik } from "formik"
+import { useState } from "react"
 import * as yup from "yup"
 import axios from "axios"
 import {Link} from "react-router-dom"
@@ -18,17 +19,26 @@ function Register() {
             password:""
         },
         onSubmit:(values,{ resetForm }) =>{
-            console.log(values)
+            values.username = values.username
             axios.post("http://localhost:3001/v1/api/users/register",values)
             .then(response=>{
-                console.log(response.data)
+
+                if (typeof response.data === "object"){
+                    resetForm()
+                    return alert(`Account with username ${response.data.username} is successfully created`)
+                }
+
                 resetForm()
+                alert(response.data)
+                
+
             })
             .catch(err=>{
                 console.error(err)
                 setError("An error occured while posting data.")
             })
         },
+
         validationSchema
 
     })

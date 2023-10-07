@@ -5,16 +5,14 @@ import axios from "axios"
 import {Link} from "react-router-dom"
 import { useNavigate } from 'react-router-dom';
 
-
 const validationSchema = yup.object({
     username:yup.string().required("Required"),
     password:yup.string().required("Required")
 })
 
-
 function Signin() {
-
     const navigate = useNavigate();
+
     const formik = useFormik({
         initialValues:{
             username:"",
@@ -23,10 +21,15 @@ function Signin() {
         onSubmit:(values,{resetForm})=>{
             axios.post("http://localhost:3001/v1/api/users/signin",values)
             .then(response=>{
-                localStorage.setItem('token',response.data.token)
+
+                if(response.status === 200){
+                    resetForm()
+                    localStorage.setItem('token',response.data.token)
+                    return navigate("/")
+                }
+
                 resetForm()
-                console.log(localStorage)
-                navigate("/")
+                alert(response.data)
             })
         },
         validationSchema

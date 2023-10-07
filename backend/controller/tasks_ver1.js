@@ -6,30 +6,19 @@ const asyncHandler = require("express-async-handler")
 
 router.route("")
 // SHOW ALL TASKS
-    .get(passport.authenticate("jwt",{session:false}), async (req,res,next)=>{
-        try{
+    .get(passport.authenticate("jwt",{session:false}), asyncHandler (async (req,res)=>{
             const foundAll = await todoSchema.find({id:req.user._id})
             res.json(foundAll)
-        }
-
-        catch(err){
-            next(err)
-        }
-    })
+    }))
 
 // CREATE ONE TASK
-    .post(passport.authenticate("jwt",{session:false}), async (req,res,next)=>{
-        try{
+    .post(passport.authenticate("jwt",{session:false}), asyncHandler(async (req,res)=>{
             req.body.id = req.user._id
             todoSchema.create(req.body).then(created=>{
-                console.log(created)
                 res.json(created)
             })
-        }
-        catch(err){
-            next(err)
-        }
-    })
+        
+    }))
 
 
 router.route("/:id")
@@ -41,11 +30,10 @@ router.route("/:id")
     })
 
 // DELETE A TASK BY ID
-    .delete((req,res)=>{
-        todoSchema.findByIdAndDelete(req.params.id).then(deleted=>{
-            res.json(deleted)
-        })
-    })
+    .delete(passport.authenticate("jwt",{session:false}), asyncHandler(async (req,res)=>{
+        const deleted = await todoSchema.findByIdAndDelete(req.params.id)
+        res.json(deleted)
+    }))
 
 // DELETE MULTIPLE TASK BY SELECTIONS
 

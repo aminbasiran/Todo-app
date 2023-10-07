@@ -13,7 +13,7 @@ router.route("/register")
     .post(asyncHandler (async (req,res)=>{
         const user = await userSchema.findOne({username:req.body.username}) //check here and fix
         user  ? 
-        res.status(400).json("Account already exists") :
+        res.status(202).json("This username already existed") :
         bcrypt.genSalt(10, (err, salt) => {
 
             if (err){
@@ -35,7 +35,7 @@ router.route("/register")
 
                     res.status(201).json({
                         id: created._id,
-                        name: created.username,
+                        username: created.username,
                         password: created.password
                     })
                 })
@@ -48,25 +48,25 @@ router.route("/signin")
             const user = await userSchema.findOne({username:req.body.username})
 
             if(!user){
-                return res.json("There is no account registered")
+                return res.status(201).json("There is no account registered")  //fixx here 
             }
 
             if(!await bcrypt.compare(req.body.password,user.password)){
-                return res.json("Incorrect password")
+                return res.status(201).json("Incorrect password")
             }
 
             res.status(200).json({
                 _id: user._id,
-                name: user.username,
+                username: user.username,
                 password: user.password,
-                token: `Bearer ${generateToken(user._id)}`    // SAVE THIS TOKEN SERVER SIDE (localStorage, cookies)  
+                token: `Bearer ${generateToken(user._id)}`  // SAVE THIS TOKEN SERVER SIDE (localStorage, cookies)  
             })
     }))
 
-router.route("/test")
-    .get(asyncHandler(async (req, res) => {
-	// throw new SyntaxError()
-	throw new SyntaxError()
-}))
+// router.route("/test")
+//     .get(asyncHandler(async (req, res) => {
+// 	// throw new SyntaxError()
+// 	throw new SyntaxError()
+// }))
 
 module.exports = router
