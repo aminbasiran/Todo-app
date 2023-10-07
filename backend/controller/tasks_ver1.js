@@ -1,12 +1,14 @@
 const router = require("express").Router()
 const todoSchema = require("../model/todoSchema.js")
-const {protect} = require("../middleware/authMiddleware.js")
+const passport = require("passport")
+require("../middleware/passportMiddleware.js")
+const asyncHandler = require("express-async-handler")
 
 router.route("")
 // SHOW ALL TASKS
-    .get(protect, async (req,res,next)=>{
+    .get(passport.authenticate("jwt",{session:false}), async (req,res,next)=>{
         try{
-            const foundAll = await todoSchema.find({id:req.verifiedUser.id})
+            const foundAll = await todoSchema.find({id:req.user._id})
             res.json(foundAll)
         }
 
@@ -16,17 +18,17 @@ router.route("")
     })
 
 // CREATE ONE TASK
-    .post(protect, async (req,res,next)=>{
+    .post(passport.authenticate("jwt",{session:false}), async (req,res,next)=>{
         try{
-            req.body.id = req.verifiedUser._id
+            req.body.id = req.user._id
             todoSchema.create(req.body).then(created=>{
+                console.log(created)
                 res.json(created)
             })
         }
         catch(err){
             next(err)
         }
-        
     })
 
 

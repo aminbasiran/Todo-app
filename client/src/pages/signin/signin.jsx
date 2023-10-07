@@ -20,15 +20,14 @@ function Signin() {
             username:"",
             password:""
         },
-        onSubmit:values=>{
+        onSubmit:(values,{resetForm})=>{
             axios.post("http://localhost:3001/v1/api/users/signin",values)
             .then(response=>{
-                console.log(response.data)
                 localStorage.setItem('token',response.data.token)
+                resetForm()
                 console.log(localStorage)
                 navigate("/")
             })
-            .catch()
         },
         validationSchema
     })

@@ -20,7 +20,7 @@ function App() {
     
     const rest = "http://localhost:3001/v1/api/tasks"
     axios.get(rest,{headers:{
-        "Authorization": `Bearer ${current_user_token}`
+        "Authorization": current_user_token
     }})
       .then(response => {
         setTasks(response.data)
@@ -43,7 +43,7 @@ function App() {
       axios.post(rest,
         {title: title},
         {headers:{
-          "Authorization": `Bearer ${token}`
+          "Authorization": `${token}`
         }})
       .then(response =>{
         setTasks([...tasks,response.data])

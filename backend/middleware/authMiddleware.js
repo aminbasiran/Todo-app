@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken")
 const userSchema = require("../model/userSchema.js")
-require("dotenv").config()
 
-const protect = async (req,res,next) =>{
+const protect = async (req,res,next) =>{ //CHANGE THIS TO PASSPORTJS WITH JWT strategy
 
     let token
 
@@ -19,10 +18,7 @@ const protect = async (req,res,next) =>{
 
     if(!token){
         res.status(401).json("no token, not authorized")
-
     }
 }
-
-
 
 module.exports = {protect}

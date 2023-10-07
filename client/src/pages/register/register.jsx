@@ -9,7 +9,6 @@ const validationSchema = yup.object({
     email:yup.string().required("Required")
 })
 
-
 function Register() {
 
     const formik = useFormik({
@@ -18,11 +17,12 @@ function Register() {
             email:"",
             password:""
         },
-        onSubmit:(values)=>{
+        onSubmit:(values,{ resetForm }) =>{
             console.log(values)
             axios.post("http://localhost:3001/v1/api/users/register",values)
             .then(response=>{
                 console.log(response.data)
+                resetForm()
             })
             .catch(err=>{
                 console.error(err)
